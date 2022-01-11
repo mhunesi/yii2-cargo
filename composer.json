@@ -1,0 +1,23 @@
+{
+    "name": "mhunesi/yii2-cargo",
+    "description": "Yii2 Cargo Integration",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","cargo","integration"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gezer Ayakkabı",
+            "email": "dev@gezer.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "mhunesi/yii2-hepsijet": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "mhunesi\\cargo\\": "src"
+        }
+    }
+}
