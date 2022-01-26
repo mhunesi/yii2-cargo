@@ -13,7 +13,7 @@
     "require": {
         "yiisoft/yii2": "~2.0.0",
         "guzzlehttp/guzzle": "^6.3",
-        "mhunesi/yii2-hepsijet": "dev-master"
+        "mhunesi/yii2-hepsijet": "@dev"
     },
     "autoload": {
         "psr-4": {
