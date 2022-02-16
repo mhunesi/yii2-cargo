@@ -223,7 +223,7 @@ class HepsiJetProvider extends Provider
     {
         $numbers = [];
 
-        for ($i=0;$i >= $totalParcels;$i++){
+        for ($i=0;$i < $totalParcels;$i++){
             $numbers[] = $trackingNumber;
         }
 
