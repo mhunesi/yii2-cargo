@@ -79,9 +79,9 @@ abstract class Provider extends BaseObject
         return $this;
     }
 
-    public function getCargoConfig($key)
+    public function getCargoConfig($key, $defaultValue = null)
     {
-        return $this->cargoConfigs[$key] ?? null;
+        return $this->cargoConfigs[$key] ?? $defaultValue;
     }
 
 

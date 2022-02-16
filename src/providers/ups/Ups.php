@@ -28,13 +28,13 @@ class Ups extends Component
 
     public $password;
 
-    protected $soapClient;
-
-    protected $sessionID;
-
     public $apiUrl = "http://ws.ups.com.tr/wsCreateShipment/wsCreateShipment.asmx?wsdl";
 
     public $trackingApiUrl = "https://ws.ups.com.tr/QueryPackageInfo/wsQueryPackagesInfo.asmx?wsdl";
+
+    protected $sessionID;
+
+    protected $soapClient;
 
     public function init()
     {
@@ -87,6 +87,7 @@ class Ups extends Component
             $response['label_zpl'] = (array)$_response->CreateShipment_Type3_ZPL_TypesResult->ZplResult->string;
             $response['label_png'] =(array)($_response->CreateShipment_Type3_ZPL_TypesResult->BarkodArrayPng->string ?? []);
             $response['label_url'] = $_response->CreateShipment_Type3_ZPL_TypesResult->LinkForLabelPrinting;
+            $response['tracking_url'] = "https://www.ups.com.tr/WaybillSorgu.aspx?Waybill={$response['tracking_number']}";
             $response['parcelNumbers'] = $this->getParcels((array)$response['label_zpl']);
         } catch (\Exception $th) {
             $response['status'] = false;

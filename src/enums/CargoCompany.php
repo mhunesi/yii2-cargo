@@ -9,6 +9,8 @@ class CargoCompany
 
     public const HEPSIJET = "hepsijet";
 
+    public const ARAS = "aras";
+
     public function __get($name)
     {
         throw new \Exception("{$name} provider not found!");

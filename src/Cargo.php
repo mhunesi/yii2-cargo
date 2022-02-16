@@ -30,6 +30,7 @@ class Cargo extends Component
     private $_providers = [
         CargoCompany::UPS => 'mhunesi\cargo\providers\ups\UpsProvider',
         CargoCompany::HEPSIJET => 'mhunesi\cargo\providers\hepsijet\HepsiJetProvider',
+        CargoCompany::ARAS => 'mhunesi\cargo\providers\aras\ArasProvider',
     ];
 
     /**

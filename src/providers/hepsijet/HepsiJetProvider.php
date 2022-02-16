@@ -136,6 +136,7 @@ class HepsiJetProvider extends Provider
             'errorMessage' => $cargoResult->getMessage(),
             'tracking_number' => $trackingNumber,
             'label_url' => "https://hepsijet.com/gonderi-takibi/{$trackingNumber}",
+            'tracking_url' => "https://hepsijet.com/gonderi-takibi/{$trackingNumber}",
             'label_zpl' => $labelZpl,
             'parcelNumbers' => $this->getParcelNumbers($data->total_parcels,$trackingNumber)
         ]);

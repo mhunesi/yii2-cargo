@@ -40,6 +40,12 @@ class Shipment extends Model
      * @var double
      */
     private $_desi = 0;
+
+    /**
+     * @var double
+     */
+    private $_weight = 0;
+
     /**
      * @var int
      */
@@ -148,7 +154,7 @@ class Shipment extends Model
      */
     public function getDesi(): float
     {
-        if (!$this->_desi && count($this->_contents) > 0) {
+        if ($this->_desi === 0 && count($this->_contents) > 0) {
             $desiTotal = 0;
 
             foreach ($this->_contents as $content) {

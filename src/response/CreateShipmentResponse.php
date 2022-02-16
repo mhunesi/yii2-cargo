@@ -32,6 +32,11 @@ class CreateShipmentResponse extends BaseResponse
     public $label_url;
 
     /**
+     * @var string
+     */
+    public $tracking_url;
+
+    /**
      * Parcel Numbers
      * @var array
      */
