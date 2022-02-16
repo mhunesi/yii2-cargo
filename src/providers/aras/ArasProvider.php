@@ -106,7 +106,9 @@ class ArasProvider extends Provider
 
                         $response->label_png = (array)$getBarcodeResult->GetBarcodeResult->Images->base64Binary;
 
-                        $response->tracking_number = ((array)$getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel)[0]->TrackingNumber;
+                        $barcodeModel = $getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel;
+
+                        $response->tracking_number = ArrayHelper::isAssociative($barcodeModel) ? $barcodeModel->TrackingNumber : $barcodeModel[0]->TrackingNumber;
 
                         $response->tracking_url = 'https://social.araskargo.com.tr/';
 
