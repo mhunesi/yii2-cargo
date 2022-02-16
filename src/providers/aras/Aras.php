@@ -14,9 +14,7 @@
 namespace mhunesi\cargo\providers\aras;
 
 use mhunesi\cargo\helpers\SoapClient;
-use mhunesi\cargo\models\Shipment;
 use yii\base\Component;
-use yii\helpers\ArrayHelper;
 
 /**
  * Test Url https://customerservicestest.araskargo.com.tr/arascargoservice/arascargoservice.asmx
@@ -26,7 +24,7 @@ use yii\helpers\ArrayHelper;
  */
 class Aras extends Component
 {
-    public $apiUrl = 'http://customerservices.araskargo.com.tr/ArasCargoCustomerIntegrationService/ArasCargoIntegrationService.svc?wsdl';
+    public $apiUrl = 'https://customerservicestest.araskargo.com.tr/arascargoservice/arascargoservice.asmx?wsdl';
 
     public $username = 'neodyum';
 
