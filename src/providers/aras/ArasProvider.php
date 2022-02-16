@@ -108,7 +108,7 @@ class ArasProvider extends Provider
 
                         $barcodeModel = ArrayHelper::toArray($getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel);
 
-                        $response->tracking_number = ArrayHelper::isAssociative($barcodeModel) ? $barcodeModel->TrackingNumber : $barcodeModel[0]->TrackingNumber;
+                        $response->tracking_number = ArrayHelper::isAssociative($barcodeModel) ? $barcodeModel['TrackingNumber'] : $barcodeModel[0]['TrackingNumber'];
 
                         $response->tracking_url = 'https://social.araskargo.com.tr/';
 
