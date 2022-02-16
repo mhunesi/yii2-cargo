@@ -28,9 +28,9 @@ class Aras extends Component
 {
     public $apiUrl = 'http://customerservices.araskargo.com.tr/ArasCargoCustomerIntegrationService/ArasCargoIntegrationService.svc?wsdl';
 
-    public $username;
+    public $username = 'neodyum';
 
-    public $password;
+    public $password = 'nd2580';
 
     public $customerCode;
 
