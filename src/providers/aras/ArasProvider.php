@@ -106,7 +106,7 @@ class ArasProvider extends Provider
 
                         $response->label_png = (array)$getBarcodeResult->GetBarcodeResult->Images->base64Binary;
 
-                        $barcodeModel = $getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel;
+                        $barcodeModel = ArrayHelper::toArray($getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel);
 
                         $response->tracking_number = ArrayHelper::isAssociative($barcodeModel) ? $barcodeModel->TrackingNumber : $barcodeModel[0]->TrackingNumber;
 
