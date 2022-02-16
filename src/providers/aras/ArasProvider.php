@@ -72,7 +72,7 @@ class ArasProvider extends Provider
                 $params['PieceDetails'][] = [
                     'VolumetricWeight' => round(($content->weight * $content->height * $content->length) / 3000),
                     'Weight' => $content->weight,
-                    'BarcodeNumber' => $content->sku. ".00{$k}{$i}",
+                    'BarcodeNumber' => $content->sku. ".00{$k}{$i}" . microtime(),
                     'ProductNumber' => $content->sku,
                     'Description' => $content->description,
                 ];
