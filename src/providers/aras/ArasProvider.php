@@ -112,7 +112,7 @@ class ArasProvider extends Provider
 
                         $response->tracking_url = 'https://social.araskargo.com.tr/';
 
-                        $response->parcelNumbers = ArrayHelper::getColumn($getBarcodeResult->GetBarcodeResult->BarcodeModelLst->BarcodeModel,'Barcode');
+                        $response->parcelNumbers = ArrayHelper::isAssociative($barcodeModel) ? ((array)ArrayHelper::getValue($barcodeModel,'Barcode')) : ArrayHelper::getColumn($barcodeModel,'Barcode');
                     }
 
                 }else{
