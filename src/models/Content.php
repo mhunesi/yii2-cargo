@@ -63,4 +63,9 @@ class Content extends Model
      */
     public $currency;
 
+    /**
+     * @var string
+     */
+    public $barcode;
+
 }
