@@ -70,7 +70,7 @@ class HepsiJetProvider extends Provider
                     'productCode' => $this->getCargoConfig('delivery.product.productCode')
                 ]),
                 'receiver' => new Receiver([
-                    'companyCustomerId' => $data->receiver->id,
+                    'companyCustomerId' => $this->getCargoConfig('delivery.receiver.companyCustomerId'),
                     'firstName' => explode(' ',$data->receiver->name)[0] ?? $data->receiver->name,
                     'lastName' => explode(' ',$data->receiver->name)[1] ?? '',
                     'phone1' => $data->receiver->phone,
@@ -93,7 +93,7 @@ class HepsiJetProvider extends Provider
                     'addressLine1' => $data->sender->address->addressLine1 . ' ' .  $data->sender->address->addressLine2
                 ]),
                 'recipientAddress' => new Address([
-                    'companyAddressId' => $data->receiver->address->id,
+                    'companyAddressId' => $this->getCargoConfig('delivery.recipientAddress.companyAddressId'),
                     'country' => new Country([
                         'name' => $data->receiver->address->country->name
                     ]),

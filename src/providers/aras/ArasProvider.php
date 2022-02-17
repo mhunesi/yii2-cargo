@@ -41,12 +41,14 @@ class ArasProvider extends Provider
     {
         $response = new CreateShipmentResponse();
 
+        $integrationCode = preg_replace('/\D/', '', $shipmentModel->order_number);
+
         $params = [
             'UserName' => $this->component->username,
             'Password' => $this->component->password,
             'TradingWaybillNumber' => $shipmentModel->order_number, //Sevk İrsaliye No.
             'InvoiceNumber' => $shipmentModel->order_number, //Fatura No
-            'IntegrationCode' => $shipmentModel->order_number, //Sipariş Kodu /Entegrasyon Kodu (mök )
+            'IntegrationCode' => $integrationCode, //Sipariş Kodu /Entegrasyon Kodu (mök )
             'ReceiverName' => $shipmentModel->receiver->name,
             'ReceiverAddress' => $shipmentModel->receiver->address->addressLine1 . ' ' . $shipmentModel->receiver->address->addressLine2,
             'ReceiverPhone1' => $shipmentModel->receiver->phone,
@@ -69,13 +71,18 @@ class ArasProvider extends Provider
         foreach ($shipmentModel->contents as $k => $content) {
 
             for ($i = 0;$i < $content->quantity;$i++){
+
+                $barcodeNumber = $integrationCode . str_pad($k + $i + 1,2,"0",STR_PAD_LEFT);
+
                 $params['PieceDetails'][] = [
                     'VolumetricWeight' => round(($content->weight * $content->height * $content->length) / 3000),
                     'Weight' => $content->weight,
-                    'BarcodeNumber' => $content->sku. ".00{$k}{$i}" . microtime(),
+                    'BarcodeNumber' => $barcodeNumber,
                     'ProductNumber' => $content->sku,
                     'Description' => $content->description,
                 ];
+
+                $response->parcelNumbers[] = $barcodeNumber;
             }
         }
 
@@ -97,7 +104,7 @@ class ArasProvider extends Provider
                     $getBarcodeResult = $this->component->client->GetBarcode([
                         'Username' => $this->component->username,
                         'Password' => $this->component->password,
-                        'integrationCode' => $shipmentModel->order_number
+                        'integrationCode' => $integrationCode
                     ]);
 
                     if (isset($getBarcodeResult->GetBarcodeResult)){
@@ -112,7 +119,7 @@ class ArasProvider extends Provider
 
                         $response->tracking_url = 'https://social.araskargo.com.tr/';
 
-                        $response->parcelNumbers = ArrayHelper::isAssociative($barcodeModel) ? ((array)ArrayHelper::getValue($barcodeModel,'Barcode')) : ArrayHelper::getColumn($barcodeModel,'Barcode');
+                        //$response->parcelNumbers = ArrayHelper::isAssociative($barcodeModel) ? ((array)ArrayHelper::getValue($barcodeModel,'Barcode')) : ArrayHelper::getColumn($barcodeModel,'Barcode');
                     }
 
                 }else{
