@@ -50,6 +50,8 @@ class HepsiJetProvider extends Provider
 
     public function createShipment(Shipment $data): CreateShipmentResponse
     {
+        $prefix = $this->getCargoConfig('_prefix','');
+
         $model = new Cargo([
             'company' => new Company([
                 'name' => $this->getCargoConfig('company.name'),
@@ -59,8 +61,8 @@ class HepsiJetProvider extends Provider
                 'abbreviationCode' => $this->getCargoConfig('currentXDock.abbreviationCode')
             ]),
             'delivery' => new Delivery([
-                'customerDeliveryNo' => $data->delivery_number,
-                'customerOrderId' => $data->order_number,
+                'customerDeliveryNo' => $prefix.$data->delivery_number,
+                'customerOrderId' => $prefix.$data->order_number,
                 'totalParcels' => $data->total_parcels,
                 'desi' => $data->desi,
                 'deliverySlotOriginal' => $this->getCargoConfig('delivery.deliverySlotOriginal'),
@@ -70,14 +72,14 @@ class HepsiJetProvider extends Provider
                     'productCode' => $this->getCargoConfig('delivery.product.productCode')
                 ]),
                 'receiver' => new Receiver([
-                    'companyCustomerId' => $this->getCargoConfig('delivery.receiver.companyCustomerId'),
+                    'companyCustomerId' => $prefix .$data->receiver->id,
                     'firstName' => explode(' ',$data->receiver->name)[0] ?? $data->receiver->name,
                     'lastName' => explode(' ',$data->receiver->name)[1] ?? '',
                     'phone1' => $data->receiver->phone,
                     'email' => $data->receiver->email
                 ]),
                 'senderAddress' => new Address([
-                    'companyAddressId' => $this->getCargoConfig('delivery.senderAddress.companyAddressId'),
+                    'companyAddressId' => $prefix.$data->sender->address->id,
                     'country' => new Country([
                         'name' => $data->sender->address->country->name
                     ]),
@@ -93,7 +95,7 @@ class HepsiJetProvider extends Provider
                     'addressLine1' => $data->sender->address->addressLine1 . ' ' .  $data->sender->address->addressLine2
                 ]),
                 'recipientAddress' => new Address([
-                    'companyAddressId' => $this->getCargoConfig('delivery.recipientAddress.companyAddressId'),
+                    'companyAddressId' => $prefix.$data->receiver->address->id,
                     'country' => new Country([
                         'name' => $data->receiver->address->country->name
                     ]),
