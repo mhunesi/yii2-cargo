@@ -79,7 +79,7 @@ class HepsiJetProvider extends Provider
                     'email' => $data->receiver->email
                 ]),
                 'senderAddress' => new Address([
-                    'companyAddressId' => $prefix.$data->sender->address->id,
+                    'companyAddressId' => $this->getCargoConfig('delivery.senderAddress.companyAddressId'),
                     'country' => new Country([
                         'name' => $data->sender->address->country->name
                     ]),
