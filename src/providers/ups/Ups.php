@@ -215,7 +215,7 @@ class Ups extends Component
 
             foreach ($trackingGroup as $trackingNumber => $allProcess) {
                 $trackingResponse = [
-                    'trackingNumber' => $trackingNumber,
+                    'trackingNumber' => trim($trackingNumber),
                 ];
 
                 foreach ($allProcess as $process) {
@@ -269,7 +269,10 @@ class Ups extends Component
                 return "ILERIKI BIR TARIHTE TESLIMAT ICIN BEKLETILIYOR";
                 break;
             case 2 :
-                return "ALICIYA TESLİM EDİLDİ: {$process->SignedPersonName} {$process->SignedPersonSurname} ({$process->SignedPersonRelation})	";
+                return "ALICIYA TESLİM EDİLDİ: {$process->SignedPersonName} {$process->SignedPersonSurname} ({$process->SignedPersonRelation})";
+                break;
+            case 1 :
+                return "GİRİŞ SCAN EDİLDİ ({$process->ProcessDescription2})";
                 break;
         }
 
