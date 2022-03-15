@@ -197,7 +197,9 @@ class Ups extends Component
     public function trackingList($cargoTrackingNumbers, $trnType = 'ALL_TRANSACTIONS',$referansType = 'WAYBILL_TYPE')
     {
         $this->prepareClient($this->trackingApiUrl);
-        $response = [];
+        $response = [
+            'trackingResponses' => []
+        ];
 
         try {
             $data = [
