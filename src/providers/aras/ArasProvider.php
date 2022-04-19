@@ -101,7 +101,9 @@ class ArasProvider extends Provider
 
                 if($response->status){
 
-                    $getBarcodeResult = $this->component->client->GetBarcode([
+                    $response->tracking_number = $integrationCode;
+
+                    /*$getBarcodeResult = $this->component->client->GetBarcode([
                         'Username' => $this->component->username,
                         'Password' => $this->component->password,
                         'integrationCode' => $integrationCode
@@ -120,7 +122,7 @@ class ArasProvider extends Provider
                         $response->tracking_url = 'https://social.araskargo.com.tr/';
 
                         //$response->parcelNumbers = ArrayHelper::isAssociative($barcodeModel) ? ((array)ArrayHelper::getValue($barcodeModel,'Barcode')) : ArrayHelper::getColumn($barcodeModel,'Barcode');
-                    }
+                    }*/
 
                 }else{
                     $response->errorCode = $orderResultInfo['ResultCode'];
