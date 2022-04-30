@@ -17,9 +17,11 @@ use mhunesi\cargo\providers\Provider;
 use mhunesi\cargo\response\BaseResponse;
 use mhunesi\cargo\models\CancelShipment;
 use mhunesi\cargo\response\CreateShipmentResponse;
+use mhunesi\cargo\response\TrackingProcess;
 use mhunesi\cargo\response\TrackingResponse;
 use mhunesi\cargo\response\TrackingResponses;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 class ArasProvider extends Provider
 {
@@ -171,23 +173,55 @@ class ArasProvider extends Provider
         return $this->trackingOne($trackingNumber);
     }
 
+    public function trackingByIntegrationCode($integrationCode)
+    {
+        $result = $this->component->informationClient->GetQueryJSON([
+            'loginInfo' => $this->loginInformation(),
+            'queryInfo' =>  "<QueryInfo><QueryType>1</QueryType><IntegrationCode>{$integrationCode}</IntegrationCode></QueryInfo>"
+        ]);
+
+        $result = Json::decode($result->GetQueryJSONResult)['QueryResult']['Cargo'] ?? [];
+
+        $trackingNumber = $result['KARGO_TAKIP_NO'] ?? null;
+
+        return new CreateShipmentResponse([
+            'status' => !is_null($trackingNumber),
+            'tracking_number' => $trackingNumber,
+            'tracking_url' => "http://kargotakip.araskargo.com.tr/mainpage.aspx?code={$trackingNumber}"
+        ]);
+    }
+
     private function trackingOne($trackingNumber){
 
         try{
-            $getCargoTransactionByWaybillId = $this->component->client->GetCargoTransactionByWaybillId([
-                'username' => $this->component->username,
-                'password' => $this->component->password,
-                'waybillId' => $trackingNumber
+            $response = $this->component->informationClient->GetQueryJSON([
+                'loginInfo' => $this->loginInformation(),
+                'queryInfo' =>  "<QueryInfo><QueryType>9</QueryType><TrackingNumber>{$trackingNumber}</TrackingNumber></QueryInfo>"
             ]);
 
-            return new TrackingResponse([
-                'status' => false,
+            $response = Json::decode($response->GetQueryJSONResult);
+
+            $trackingResponse = new TrackingResponse([
+                'status' => true,
                 'errorMessage' => '',
                 'errorCode' => '',
                 'statusCode' => '',
-                'response' => $this->component->client->__getLastResponse(),
-                'request' => $this->component->client->__getLastRequest(),
+                'trackingProcesses' => [],
+                'trackingNumber' => $trackingNumber,
+                'response' => $this->component->informationClient->__getLastResponse(),
+                'request' => $this->component->informationClient->__getLastRequest(),
             ]);
+
+            foreach (($response['QueryResult']['CargoTransaction']) as $trackingHistory) {
+                $trackingResponse->trackingProcesses[] = new TrackingProcess([
+                    'date' => date('Y-m-d H:i:s',strtotime($trackingHistory['ISLEM_TARIHI'])),
+                    'location' => $trackingHistory['BIRIM'],
+                    'statusCode' => $trackingHistory['ISLEM'],
+                    'description' => $trackingHistory['ACIKLAMA'],
+                ]);
+            }
+
+            return $trackingResponse;
 
         }catch (\Exception $exception){
             return new TrackingResponse([
@@ -221,5 +255,17 @@ class ArasProvider extends Provider
             'response' => $this->component->client->__getLastResponse(),
             'request' => $this->component->client->__getLastRequest(),
         ]);
+    }
+
+
+    protected function loginInformation()
+    {
+
+        return sprintf('<LoginInfo>
+			<UserName>%s</UserName>
+			<Password>%s</Password>
+			<CustomerCode>%s</CustomerCode>
+		</LoginInfo>', $this->component->username, $this->component->password, $this->component->customerCode);
+
     }
 }

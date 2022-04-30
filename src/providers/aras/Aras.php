@@ -21,10 +21,13 @@ use yii\base\Component;
  * Prod Url https://customerws.araskargo.com.tr/arascargoservice.asmx
  *
  * @property SoapClient $client
+ * @property SoapClient $informationClient
  */
 class Aras extends Component
 {
     public $apiUrl = 'https://customerservicestest.araskargo.com.tr/arascargoservice/arascargoservice.asmx?wsdl';
+
+    public $informationUrl = 'https://customerservices.araskargo.com.tr/ArasCargoCustomerIntegrationService/ArasCargoIntegrationService.svc?wsdl';
 
     public $username = 'neodyum';
 
@@ -34,10 +37,16 @@ class Aras extends Component
 
     private $_client;
 
+    private $_informationClient;
+
     public function init()
     {
         $this->_client = new SoapClient([
             'url' => $this->apiUrl
+        ]);
+
+        $this->_informationClient = new SoapClient([
+            'url' => $this->informationUrl
         ]);
     }
 
@@ -47,5 +56,13 @@ class Aras extends Component
     public function getClient()
     {
         return $this->_client;
+    }
+
+    /**
+     * @return SoapClient
+     */
+    public function getInformationClient()
+    {
+        return $this->_informationClient;
     }
 }
