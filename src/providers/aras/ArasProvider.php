@@ -191,6 +191,27 @@ class ArasProvider extends Provider
         ]);
     }
 
+    private function isDelivered($trackingNumber)
+    {
+        $result = $this->component->informationClient->GetQueryJSON([
+            'loginInfo' => $this->loginInformation(),
+            'queryInfo' =>  "<QueryInfo><QueryType>1</QueryType><TrackingNumber>{$trackingNumber}</TrackingNumber></QueryInfo>"
+        ]);
+
+        $result = Json::decode($result->GetQueryJSONResult)['QueryResult']['Cargo'] ?? [];
+
+        if(empty($result) || $result['DURUM_KODU'] !== "6"){
+           return false;
+        }
+
+        return new TrackingProcess([
+            'statusCode' => 'TESLİM EDİLDİ',
+            'date' => date('Y-m-d H:i:s',strtotime($result['TESLIM_TARIHI'] . ' ' . $result['TESLIM_SAATI'])),
+            'location' => $result['CIKIS_SUBE'],
+            'description' => "Teslim Edildi - ({$result['TESLIM_ALAN']})",
+        ]);
+    }
+
     private function trackingOne($trackingNumber){
 
         try{
@@ -219,6 +240,10 @@ class ArasProvider extends Provider
                     'statusCode' => $trackingHistory['ISLEM'],
                     'description' => $trackingHistory['ACIKLAMA'],
                 ]);
+            }
+
+            if($cargoDetail = $this->isDelivered($trackingNumber)){
+                $trackingResponse->trackingProcesses[] = $cargoDetail;
             }
 
             return $trackingResponse;
